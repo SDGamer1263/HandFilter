@@ -79,7 +79,7 @@ class SettingsManager:
         self._middle_tip_lm: int = 12
         self._ring_tip_lm: int = 16
         self._pinky_tip_lm: int = 20
-        self._pinch_distance_threshold: float = 0.03
+        self._pinch_distance_threshold: float = 0.05
         self._pinch_hold_duration: float = 1.0
 
         # Controls

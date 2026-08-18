@@ -84,14 +84,14 @@ class HandGestureController:
         dist = math.hypot(dx, dy)
         is_pinching = dist < s.get_pinch_distance_threshold()
 
-        others_extended = (
-            middle.y < hand_landmarks[s.get_middle_finger_tip_landmark_id() - 2].y
-            and ring.y < hand_landmarks[s.get_ring_finger_tip_landmark_id() - 2].y
-            and pinky.y < hand_landmarks[s.get_pinky_finger_tip_landmark_id() - 2].y
-        )
+        # At least one other finger extended (not a fist)
+        middle_extended = middle.y < hand_landmarks[s.get_middle_finger_tip_landmark_id() - 2].y
+        ring_extended = ring.y < hand_landmarks[s.get_ring_finger_tip_landmark_id() - 2].y
+        pinky_extended = pinky.y < hand_landmarks[s.get_pinky_finger_tip_landmark_id() - 2].y
+        not_fist = middle_extended or ring_extended or pinky_extended
 
         now = time.monotonic()
-        if is_pinching and others_extended:
+        if is_pinching and not_fist:
             if self._pinch_triggered[handedness_label]:
                 return False
             if self._pinch_timers[handedness_label] == 0.0:
