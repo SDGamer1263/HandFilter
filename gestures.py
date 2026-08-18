@@ -116,6 +116,35 @@ class HandGestureController:
             return False
         return self.count_fingers(hand_landmarks, handedness) == 0
 
+    # ── fist-and-hold (for clear canvas) ──────────────────────────────
+
+    def is_fist_and_hold(
+        self,
+        hand_landmarks: Optional[List[NormalizedLandmark]],
+        handedness_label: str,
+    ) -> bool:
+        """True when hand is in a fist held for ``pinch_hold_duration`` seconds.
+        Requires release before refiring."""
+        if not hand_landmarks:
+            self._pinch_timers[handedness_label] = 0.0
+            self._pinch_triggered[handedness_label] = False
+            return False
+
+        if not self.is_fist(hand_landmarks, handedness_label):
+            self._pinch_timers[handedness_label] = 0.0
+            self._pinch_triggered[handedness_label] = False
+            return False
+
+        now = time.monotonic()
+        if self._pinch_timers[handedness_label] == 0.0:
+            self._pinch_timers[handedness_label] = now
+        elif (now - self._pinch_timers[handedness_label]) >= self.settings.get_pinch_hold_duration():
+            self._pinch_triggered[handedness_label] = True
+            self._pinch_timers[handedness_label] = 0.0
+            return True
+
+        return False
+
     # ── drawing-mode toggle ─────────────────────────────────────────
 
     def should_toggle_drawing_mode(

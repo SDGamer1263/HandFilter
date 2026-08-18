@@ -10,7 +10,7 @@ Real-time hand tracking application with drawing, filters, and gesture controls 
 - **Gesture Controls**:
   - 5 fingers up on LEFT hand: toggle drawing mode on/off
   - Fist on right hand: inhibits drawing (while held)
-  - Pinch + hold on LEFT hand: clear canvas (in drawing mode)
+  - Fist held 1s on LEFT hand: clear canvas (in drawing mode)
 - **Multi-threaded**: Separate capture, inference, and render threads with thread-safe synchronization
 - **Performance Overlay**: Real-time FPS and latency display
 
@@ -51,7 +51,7 @@ python main.py
 |---------|------|--------|
 | 5 fingers up | Left | Toggle drawing mode (Filters ↔ Drawing) |
 | Fist | Right | Disable drawing (while held) |
-| Pinch + hold | Left | Clear canvas (in drawing mode) |
+| Fist held 1s | Left | Clear canvas (in drawing mode) |
 | Finger count (1-6) | Right | Select filter in Filters mode |
 
 ## Architecture

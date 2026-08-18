@@ -172,10 +172,10 @@ def main() -> None:
             )
             profiling["drawing_update_ms"] = (time.time() - t_draw) * 1000
 
-            # Pinch-and-hold = clear canvas
+            # Fist-and-hold (1s) = clear canvas
             if (
                 left_lm
-                and controller.is_pinch_and_hold(left_lm, "Left")
+                and controller.is_fist_and_hold(left_lm, "Left")
                 and state.is_mode(ApplicationMode.DRAWING)
             ):
                 drawing.clear_canvas()
