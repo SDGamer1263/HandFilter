@@ -5,12 +5,12 @@ Real-time hand tracking application with drawing, filters, and gesture controls 
 ## Features
 
 - **Hand Tracking**: MediaPipe HandLandmarker (VIDEO mode) with 21 3D landmarks per hand
-- **Drawing Mode**: Right index finger acts as a pen (5 fingers up to enable)
+- **Drawing Mode**: Right index finger acts as a pen (5 fingers up on LEFT hand to enable)
 - **Portal Filters**: Region between index fingertips applies filters (retro, B&W, invert, pixelate, blur, sketch) selected by right-hand finger count
 - **Gesture Controls**:
-  - Pinch-and-hold (1s) on left hand: toggle modes
-  - Fist on right hand: inhibits drawing
-  - 5 fingers on left hand: clear canvas
+  - 5 fingers up on LEFT hand: toggle drawing mode on/off
+  - Fist on right hand: inhibits drawing (while held)
+  - Pinch + hold on LEFT hand: clear canvas (in drawing mode)
 - **Multi-threaded**: Separate capture, inference, and render threads with thread-safe synchronization
 - **Performance Overlay**: Real-time FPS and latency display
 
@@ -42,16 +42,16 @@ python main.py
 | Key | Action |
 |-----|--------|
 | `q` | Quit |
-| `c` | Clear canvas |
+| `c` | Clear canvas (in drawing mode) |
+| `m` | Toggle menu overlay |
 
 ### Gestures
 
 | Gesture | Hand | Action |
 |---------|------|--------|
-| 5 fingers up | Right | Enable drawing mode |
-| Pinch + hold (1s) | Left | Cycle mode: Filters → Drawing → Menu |
+| 5 fingers up | Left | Toggle drawing mode (Filters ↔ Drawing) |
 | Fist | Right | Disable drawing (while held) |
-| 5 fingers up | Left | Clear canvas |
+| Pinch + hold | Left | Clear canvas (in drawing mode) |
 | Finger count (1-6) | Right | Select filter in Filters mode |
 
 ## Architecture
