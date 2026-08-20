@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="800" height="420" fill="#0d1117" rx="12"/>
+  <text x="400" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#e6edf3">HandFilter — Gesture Guide</text>
+
+  <!-- Left hand column -->
+  <text x="200" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#58a6ff">✋ LEFT HAND — Mode / Clear</text>
+  <g font-size="13" fill="#c9d1d9">
+    <rect x="40" y="84" width="320" height="44" rx="8" fill="#161b22" stroke="#30363d"/>
+    <text x="60" y="110">✋ 5 fingers up</text><text x="350" y="110" text-anchor="end" fill="#7ee787">Toggle Drawing ↔ Filters</text>
+
+    <rect x="40" y="134" width="320" height="44" rx="8" fill="#161b22" stroke="#30363d"/>
+    <text x="60" y="160">✊ Fist, hold 1s</text><text x="350" y="160" text-anchor="end" fill="#7ee787">Clear canvas (Drawing)</text>
+  </g>
+
+  <!-- Right hand column -->
+  <text x="600" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#58a6ff">☝️ RIGHT HAND — Draw / Filters</text>
+  <g font-size="13" fill="#c9d1d9">
+    <rect x="440" y="84" width="320" height="44" rx="8" fill="#161b22" stroke="#30363d"/>
+    <text x="460" y="110">☝️ Index finger</text><text x="750" y="110" text-anchor="end" fill="#7ee787">Draw (Drawing mode)</text>
+
+    <rect x="440" y="134" width="320" height="44" rx="8" fill="#161b22" stroke="#30363d"/>
+    <text x="460" y="160">✊ Fist (held)</text><text x="750" y="160" text-anchor="end" fill="#7ee787">Pause drawing</text>
+  </g>
+
+  <!-- Filter picker (right hand finger count) -->
+  <text x="400" y="214" text-anchor="middle" font-size="14" font-weight="700" fill="#58a6ff">Filters Mode — Right-hand finger count picks filter (portal between both index tips)</text>
+  <g font-size="12" fill="#c9d1d9">
+    <rect x="40"  y="228" width="100" height="40" rx="8" fill="#161b22" stroke="#30363d"/><text x="90"  y="253" text-anchor="middle">☝️ 1 · Retro</text>
+    <rect x="150" y="228" width="100" height="40" rx="8" fill="#161b22" stroke="#30363d"/><text x="200" y="253" text-anchor="middle">✌️ 2 · B&W</text>
+    <rect x="260" y="228" width="100" height="40" rx="8" fill="#161b22" stroke="#30363d"/><text x="310" y="253" text-anchor="middle">🤟 3 · Invert</text>
+    <rect x="370" y="228" width="100" height="40" rx="8" fill="#161b22" stroke="#30363d"/><text x="420" y="253" text-anchor="middle">🖖 4 · Pixelate</text>
+    <rect x="480" y="228" width="100" height="40" rx="8" fill="#161b22" stroke="#30363d"/><text x="530" y="253" text-anchor="middle">🖐️ 5 · Blur</text>
+    <rect x="590" y="228" width="170" height="40" rx="8" fill="#161b22" stroke="#30363d"/><text x="675" y="253" text-anchor="middle">🤘 thumb+pinky · Sketch</text>
+  </g>
+
+  <!-- Flow note -->
+  <text x="400" y="320" text-anchor="middle" font-size="13" fill="#8b949e">Move hands closer / further apart to resize the portal filter region.</text>
+
+  <!-- Keyboard fallback -->
+  <text x="400" y="362" text-anchor="middle" font-size="14" font-weight="700" fill="#f0883e">⌨️ Keyboard fallback</text>
+  <g font-size="12" fill="#c9d1d9">
+    <text x="400" y="388" text-anchor="middle"><tspan fill="#f0883e">M</tspan> menu · <tspan fill="#f0883e">W/S</tspan> navigate · <tspan fill="#f0883e">A/D</tspan> change value · <tspan fill="#f0883e">Esc</tspan> close · <tspan fill="#f0883e">C</tspan> clear canvas</text>
+  </g>
+</svg>

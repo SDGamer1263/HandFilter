@@ -4,6 +4,7 @@ import os
 import time
 import logging
 import cv2
+import sys
 from typing import Dict, List, Optional, Tuple, Union
 
 from mediapipe.tasks.python.components.containers.landmark import NormalizedLandmark
@@ -18,6 +19,8 @@ from ui import PerformanceOverlay, KeyboardMenu, create_window
 from drawing import DrawingCanvas
 from video import VideoStream
 from worker import DetectionWorker
+import error_dialog
+from updater import UpdateChecker
 
 # ── logging ────────────────────────────────────────────────────────────
 
@@ -71,25 +74,32 @@ def main() -> None:
 
     tracker = HandTracker(settings)
     if tracker.detector is None:
-        logging.error("HandTracker detector failed to initialise. Exiting.")
-        return
+        error_dialog.show_model_error("HandTracker detector failed to initialise.")
 
-    try:
-        vs = VideoStream(
-            src=settings.get_cam_index(),
-            width=settings.get_cam_width(),
-            height=settings.get_cam_height(),
-        ).start()
-        logging.info("Video stream started.")
-    except Exception as exc:
-        logging.error("Failed to initialize camera: %s. Exiting.", exc)
-        tracker.close()
-        return
+    vs = None
+    while vs is None:
+        try:
+            vs = VideoStream(
+                src=settings.get_cam_index(),
+                width=settings.get_cam_width(),
+                height=settings.get_cam_height(),
+            ).start()
+            logging.info("Video stream started.")
+        except Exception as exc:
+            logging.error("Failed to initialize camera: %s", exc)
+            if not error_dialog.show_camera_error():
+                tracker.close()
+                sys.exit(0)
+            # User clicked Retry - loop continues
 
     worker = DetectionWorker(tracker).start()
     logging.info("Detection worker started.")
 
     create_window(settings.get_window_name(), settings.get_fullscreen())
+
+    # Start background update checker after window is up (non-blocking)
+    update_checker = UpdateChecker()
+    update_checker.start(delay=5)
 
     # Components that need frame dimensions → created lazily.
     drawing: Optional[DrawingCanvas] = None

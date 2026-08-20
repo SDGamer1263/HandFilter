@@ -22,6 +22,17 @@ dist/
 *.spec.bak
 *.egg-info/
 
+# Release Artifacts (built via CI, not committed)
+HandFilter-*-Windows-Setup.exe
+HandFilter-*-Windows-Portable.zip
+
+# Local Test Staging
+test_portable/
+
+# Dev/QA Prompt Notes
+*QA Prompt*.md
+*Final Release*.md
+
 # Logs & Debug Output
 *.log
 app_run.log

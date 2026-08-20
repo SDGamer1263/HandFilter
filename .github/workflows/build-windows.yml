@@ -1,0 +1,90 @@
+name: Build Windows Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Sync version
+        run: python scripts/sync-version.py
+
+      - name: Build with PyInstaller
+        run: pyinstaller -y main.spec
+
+      - name: Create portable ZIP
+        run: |
+          $version = (Get-Content version.py -Raw) -match '__version__ = "(.+)"'; $matches[1]
+          Compress-Archive -Path dist\HandFilter\* -DestinationPath "HandFilter-$version-Windows-Portable.zip" -Force
+
+      - name: Install Inno Setup
+        run: choco install innosetup --version 6.2.2 -y
+
+      - name: Build installer
+        run: |
+          $env:PATH += ";C:\Program Files (x86)\Inno Setup 6"
+          iscc installer/handfilter.iss
+
+      - name: Upload portable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HandFilter-Windows-Portable
+          path: HandFilter-*-Windows-Portable.zip
+          retention-days: 30
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HandFilter-Windows-Setup
+          path: HandFilter-*-Windows-Setup.exe
+          retention-days: 30
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - name: Download portable artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: HandFilter-Windows-Portable
+          path: artifacts/portable
+
+      - name: Download installer artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: HandFilter-Windows-Setup
+          path: artifacts/installer
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            artifacts/portable/*.zip
+            artifacts/installer/*.exe
+          generate_release_notes: true
