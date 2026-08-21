@@ -43,34 +43,31 @@ jobs:
       - name: Find Inno Setup (ISCC.exe)
         id: find_innosetup
         run: |
-          $isccPaths = @(
-            "C:\Program Files (x86)\Inno Setup 6\ISCC.exe",
-            "C:\Program Files\Inno Setup 6\ISCC.exe",
-            (Get-Command iscc -ErrorAction SilentlyContinue).Source
-          )
-          $found = $isccPaths | Where-Object { Test-Path $_ } | Select-Object -First 1
-          if ($found) {
-            echo "ISCC_PATH=$found" >> $env:GITHUB_OUTPUT
-            echo "Found ISCC at: $found"
+          $iscc = Get-Command iscc -ErrorAction SilentlyContinue
+          if (-not $iscc) {
+            $isccPaths = @(
+              "C:\Program Files (x86)\Inno Setup 6\ISCC.exe",
+              "C:\Program Files\Inno Setup 6\ISCC.exe"
+            )
+            $isccPath = $isccPaths | Where-Object { Test-Path $_ } | Select-Object -First 1
           } else {
-            echo "ISCC_PATH=" >> $env:GITHUB_OUTPUT
-            echo "ISCC not found, will install via Chocolatey"
+            $isccPath = $iscc.Source
           }
-
-      - name: Install Inno Setup (if needed)
-        if: steps.find_innosetup.outputs.ISCC_PATH == ''
-        run: choco install innosetup -y
+          if (-not $isccPath) {
+            Write-Error "ISCC.exe not found on runner"
+            exit 1
+          }
+          echo "ISCC_PATH=$isccPath" >> $env:GITHUB_OUTPUT
+          Write-Host "ISCC.exe path: $isccPath"
+          & $isccPath | Select-Object -First 3
+          $versionLine = & $isccPath 2>&1 | Select-String -Pattern "Inno Setup Setup Compiler" | Select-Object -First 1
+          if ($versionLine) {
+            Write-Host "Compiler version: $($versionLine -replace 'Inno Setup Setup Compiler ','')"
+          }
 
       - name: Build installer
         run: |
-          $isccPath = "${{ steps.find_innosetup.outputs.ISCC_PATH }}"
-          if (-not $isccPath) {
-            $isccPath = (Get-Command iscc -ErrorAction SilentlyContinue).Source
-          }
-          if (-not $isccPath) {
-            $isccPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-          }
-          & $isccPath installer/handfilter.iss
+          & "${{ steps.find_innosetup.outputs.ISCC_PATH }}" installer/handfilter.iss
 
       - name: Upload portable artifact
         uses: actions/upload-artifact@v4

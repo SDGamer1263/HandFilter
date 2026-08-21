@@ -42,6 +42,7 @@
 - [x] Upload artifacts: portable zip + setup exe
 - [x] Manual release process documented: `gh release create` with artifacts
 - [x] Fix CI: detect existing Inno Setup on runner instead of forcing v6.2.2 install (runner has v6.7.1)
+- [x] Fix CI: remove Chocolatey Inno Setup install entirely; use ISCC.exe pre-installed on windows-latest with verification step
 
 ### Phase 7 — Full Windows Testing
 - [x] Source: `python main.py` — all features
