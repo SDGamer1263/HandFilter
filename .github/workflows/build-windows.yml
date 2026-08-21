@@ -40,13 +40,37 @@ jobs:
           $version = (Get-Content version.py -Raw) -match '__version__ = "(.+)"'; $matches[1]
           Compress-Archive -Path dist\HandFilter\* -DestinationPath "HandFilter-$version-Windows-Portable.zip" -Force
 
-      - name: Install Inno Setup
-        run: choco install innosetup --version 6.2.2 -y
+      - name: Find Inno Setup (ISCC.exe)
+        id: find_innosetup
+        run: |
+          $isccPaths = @(
+            "C:\Program Files (x86)\Inno Setup 6\ISCC.exe",
+            "C:\Program Files\Inno Setup 6\ISCC.exe",
+            (Get-Command iscc -ErrorAction SilentlyContinue).Source
+          )
+          $found = $isccPaths | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if ($found) {
+            echo "ISCC_PATH=$found" >> $env:GITHUB_OUTPUT
+            echo "Found ISCC at: $found"
+          } else {
+            echo "ISCC_PATH=" >> $env:GITHUB_OUTPUT
+            echo "ISCC not found, will install via Chocolatey"
+          }
+
+      - name: Install Inno Setup (if needed)
+        if: steps.find_innosetup.outputs.ISCC_PATH == ''
+        run: choco install innosetup -y
 
       - name: Build installer
         run: |
-          $env:PATH += ";C:\Program Files (x86)\Inno Setup 6"
-          iscc installer/handfilter.iss
+          $isccPath = "${{ steps.find_innosetup.outputs.ISCC_PATH }}"
+          if (-not $isccPath) {
+            $isccPath = (Get-Command iscc -ErrorAction SilentlyContinue).Source
+          }
+          if (-not $isccPath) {
+            $isccPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          }
+          & $isccPath installer/handfilter.iss
 
       - name: Upload portable artifact
         uses: actions/upload-artifact@v4

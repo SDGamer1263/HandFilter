@@ -41,6 +41,7 @@
 - [x] Windows-latest, Python 3.11, pyinstaller, zip portable, choco innosetup, iscc
 - [x] Upload artifacts: portable zip + setup exe
 - [x] Manual release process documented: `gh release create` with artifacts
+- [x] Fix CI: detect existing Inno Setup on runner instead of forcing v6.2.2 install (runner has v6.7.1)
 
 ### Phase 7 — Full Windows Testing
 - [x] Source: `python main.py` — all features
