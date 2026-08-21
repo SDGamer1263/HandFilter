@@ -53,17 +53,14 @@ jobs:
           } else {
             $isccPath = $iscc.Source
           }
-          if (-not $isccPath) {
+          if (-not $isccPath -or -not (Test-Path -LiteralPath $isccPath -PathType Leaf)) {
             Write-Error "ISCC.exe not found on runner"
             exit 1
           }
+          $isccVersion = (Get-Item -LiteralPath $isccPath).VersionInfo.ProductVersion
           echo "ISCC_PATH=$isccPath" >> $env:GITHUB_OUTPUT
           Write-Host "ISCC.exe path: $isccPath"
-          & $isccPath | Select-Object -First 3
-          $versionLine = & $isccPath 2>&1 | Select-String -Pattern "Inno Setup Setup Compiler" | Select-Object -First 1
-          if ($versionLine) {
-            Write-Host "Compiler version: $($versionLine -replace 'Inno Setup Setup Compiler ','')"
-          }
+          Write-Host "ISCC.exe version: $isccVersion"
 
       - name: Build installer
         run: |
