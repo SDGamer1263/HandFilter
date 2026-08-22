@@ -47,7 +47,12 @@ jobs:
         run: python scripts/sync-version.py
 
       - name: Build with PyInstaller
-        run: pyinstaller -y main_linux.spec
+        run: |
+          pyinstaller --clean -y main_linux.spec
+          echo "=== PyInstaller output ==="
+          find dist -maxdepth 3 -type f -o -type d | sort
+          ls -lah dist/HandFilter || true
+          ls -lah dist/HandFilter/HandFilter || true
 
       - name: Build AppImage
         run: |
