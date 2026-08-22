@@ -61,13 +61,14 @@ a = Analysis(
 
 pyz = PYZ(a.pure)
 
-# Linux onedir bundle: EXE produces dist/HandFilter/HandFilter (the executable)
-# COLLECT then adds binaries/datas alongside it in the same directory
+# Linux onedir bundle: EXE produces dist/HandFilter/HandFilter (the executable bootloader)
+# COLLECT adds binaries/datas alongside it in the same directory
+# For onedir mode, do NOT pass binaries/datas to EXE — only to COLLECT
 exe = EXE(
     pyz,
     a.scripts,
-    a.binaries,
-    a.datas,
+    [],           # no binaries for onedir EXE
+    [],           # no datas for onedir EXE
     [],
     name='HandFilter',
     debug=False,
