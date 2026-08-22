@@ -40,14 +40,12 @@ echo "Copying AppRun..."
 cp "$REPO_ROOT/installer/AppRun" "$APPDIR/AppRun"
 chmod +x "$APPDIR/AppRun"
 
-if [ ! -f "$REPO_ROOT/hand_filter.png" ]; then
-    echo "ERROR: hand_filter.png not found."
-    echo "The workflow must generate the Linux icon before PyInstaller runs."
-    exit 1
+if [ -f "$REPO_ROOT/hand_filter.png" ]; then
+    echo "Copying application icon..."
+    cp "$REPO_ROOT/hand_filter.png" "$APPDIR/hand_filter.png"
+else
+    echo "WARNING: hand_filter.png not found, skipping icon copy."
 fi
-
-echo "Copying application icon..."
-cp "$REPO_ROOT/hand_filter.png" "$APPDIR/hand_filter.png"
 
 echo "Copying desktop entry..."
 cp "$REPO_ROOT/installer/handfilter.desktop" "$APPDIR/handfilter.desktop"

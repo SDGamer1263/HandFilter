@@ -28,8 +28,9 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq python3-tk python3-venv python3-pip \
               libglib2.0-0 libgl1 libegl1 libx11-6 libxext6 libxrender1 \
-               libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 \
-                  patchelf desktop-file-utils
+              libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 \
+              patchelf desktop-file-utils
+
       - name: Install AppImageTool
         run: |
           wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage

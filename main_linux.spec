@@ -23,7 +23,6 @@ a = Analysis(
     binaries=mediapipe_binaries,
     datas=[
         ('hand_landmarker.task', '.'),
-        ('hand_filter.png', '.'),
     ] + mediapipe_datas + cv2_datas,
     hiddenimports=[
         'mediapipe.tasks.python',
@@ -80,7 +79,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='hand_filter.png',
 )
 
 coll = COLLECT(
