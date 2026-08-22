@@ -1,0 +1,11 @@
+#!/bin/bash
+# AppRun - AppImage entry point for HandFilter
+
+APPDIR="$(dirname "$(readlink -f "$0")")"
+EXECUTABLE="$APPDIR/HandFilter/HandFilter"
+
+chmod +x "$EXECUTABLE" 2>/dev/null || true
+
+export LD_LIBRARY_PATH="$APPDIR/HandFilter${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+
+exec "$EXECUTABLE" "$@"

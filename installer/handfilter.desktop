@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=HandFilter
+Comment=Real-time hand tracking with drawing, filters, and gestures
+Exec=HandFilter
+Icon=hand_filter
+Terminal=false
+Categories=Graphics;Utility;
+StartupNotify=true

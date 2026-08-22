@@ -5,6 +5,8 @@ import sys
 import traceback
 import os
 
+import platform_utils
+
 
 def show_model_error(detail: str = "") -> None:
     """Show error dialog for MediaPipe model initialization failure."""
@@ -30,12 +32,12 @@ def show_camera_error(retry_callback=None) -> bool:
     root = tk.Tk()
     root.withdraw()
 
+    hint = platform_utils.get_camera_permission_hint()
     msg = (
         "HandFilter couldn't access your camera.\n\n"
         "Check that:\n"
         "• Your camera is connected and powered on\n"
-        "• Camera permissions are enabled in Windows Settings\n"
-        "• Another application isn't using the camera\n\n"
+        f"{hint}\n\n"
         "Would you like to retry?"
     )
 

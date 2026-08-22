@@ -15,6 +15,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 import version
+import platform_utils
 
 
 GITHUB_REPO = "SDGamer1263/HandFilter"
@@ -55,10 +56,11 @@ def get_latest_release() -> Optional[dict]:
 
 
 def find_installer_asset(release: dict) -> Optional[str]:
-    """Find the Windows installer asset URL in release assets."""
+    """Find the platform-specific installer asset URL in release assets."""
+    suffix = platform_utils.get_asset_suffix().lower()
     for asset in release.get("assets", []):
         name = asset.get("name", "").lower()
-        if name.endswith("-windows-setup.exe"):
+        if name.endswith(suffix):
             return asset["browser_download_url"]
     return None
 
@@ -98,21 +100,9 @@ def prune_stale_installers() -> None:
 
 
 def launch_update_installer(installer_path: Path) -> None:
-    """Launch the update launcher batch file."""
-    bat_path = TEMP_UPDATE_DIR / "update_launcher.bat"
-    bat_content = f'''@echo off
-timeout /t 3 /nobreak >nul
-"{installer_path}" /VERYSILENT /CURRENTUSER /NORESTART /SP-
-start "" "{os.path.join(os.environ.get("LOCALAPPDATA", ""), "Programs", "HandFilter", "HandFilter.exe")}"
-del "{installer_path}"
-del "%~f0"
-'''
+    """Launch the platform-specific update installer."""
     try:
-        TEMP_UPDATE_DIR.mkdir(parents=True, exist_ok=True)
-        with open(bat_path, "w") as f:
-            f.write(bat_content)
-        # Detach and run
-        subprocess.Popen(["cmd", "/c", str(bat_path)], creationflags=subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS)
+        platform_utils.launch_update_installer(installer_path)
     except Exception as e:
         print(f"Failed to launch updater: {e}", file=sys.stderr)
 
@@ -188,7 +178,8 @@ class UpdateChecker:
         prune_stale_installers()
         TEMP_UPDATE_DIR.mkdir(parents=True, exist_ok=True)
 
-        installer_path = TEMP_UPDATE_DIR / f"HandFilter-{version_str}-Windows-Setup.exe"
+        suffix = platform_utils.get_asset_suffix()
+        installer_path = TEMP_UPDATE_DIR / f"HandFilter-{version_str}{suffix}"
 
         root = tk.Tk()
         root.withdraw()
