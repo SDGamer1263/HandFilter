@@ -61,14 +61,14 @@ a = Analysis(
 
 pyz = PYZ(a.pure)
 
-# Linux onedir bundle: EXE produces dist/HandFilter/HandFilter (the executable bootloader)
-# COLLECT adds binaries/datas alongside it in the same directory
-# For onedir mode, do NOT pass binaries/datas to EXE — only to COLLECT
+# Linux onedir bundle: EXE with binaries/datas creates dist/HandFilter/HandFilter
+# (executable) and dist/HandFilter/_internal/ (bundled dependencies).
+# This is the standard PyInstaller 6 onedir pattern — no COLLECT needed.
 exe = EXE(
     pyz,
     a.scripts,
-    [],           # no binaries for onedir EXE
-    [],           # no datas for onedir EXE
+    a.binaries,
+    a.datas,
     [],
     name='HandFilter',
     debug=False,
@@ -81,15 +81,4 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-)
-
-# For Linux onedir, COLLECT bundles everything into dist/HandFilter/
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.datas,
-    strip=False,
-    upx=False,
-    upx_exclude=[],
-    name='HandFilter',
 )
