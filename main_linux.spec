@@ -27,9 +27,7 @@ a = Analysis(
     hiddenimports=[
         'mediapipe.tasks.python',
         'mediapipe.tasks.python.vision',
-        'mediapipe.framework',
-        'mediapipe.python._framework_bindings',
-        'mediapipe.modules',
+        'mediapipe.tasks.python.components.containers.landmark',
         '_tkinter',           # for error/update dialogs
         'tkinter',
         'tkinter.messagebox',
@@ -55,6 +53,7 @@ a = Analysis(
         'jupyter',
         'notebook',
         'IPython',
+        'sounddevice',        # unused transitive dep from mediapipe; avoid PortAudio warning
     ],
     noarchive=False,
     optimize=0,
@@ -62,6 +61,8 @@ a = Analysis(
 
 pyz = PYZ(a.pure)
 
+# Linux onedir bundle: EXE produces dist/HandFilter/HandFilter (the executable)
+# COLLECT then adds binaries/datas alongside it in the same directory
 exe = EXE(
     pyz,
     a.scripts,
@@ -81,6 +82,7 @@ exe = EXE(
     entitlements_file=None,
 )
 
+# For Linux onedir, COLLECT bundles everything into dist/HandFilter/
 coll = COLLECT(
     exe,
     a.binaries,
